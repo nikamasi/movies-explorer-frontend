@@ -1,5 +1,4 @@
 .tech {
-  padding: 100px 70px;
   background-color: #f5f5f5;
 }
 
@@ -89,5 +88,11 @@
     width: 84px;
     font-size: 12px;
     line-height: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tech__bar-element:last-child {
+    margin-bottom: 0;
   }
 }

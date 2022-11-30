@@ -15,7 +15,6 @@
 }
 
 .header__logo {
-  background-image: url("../../images/logo.svg");
   width: 38px;
   height: 38px;
   background-color: none;
@@ -23,6 +22,13 @@
 
 .header__nav {
   display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__nav_main {
+  justify-content: right;
 }
 
 .header__link {
@@ -30,12 +36,16 @@
   color: white;
   border: none;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 18px;
+  font-size: 12px;
+  line-height: 16px;
   text-decoration: none;
   text-align: center;
-  padding: 9px 0 0;
-  margin-left: 20px;
+  padding: 0;
+  margin-right: 16px;
+}
+
+.header__link:first-child {
+  margin-left: 44px;
 }
 
 .header__link:hover {
@@ -44,7 +54,6 @@
 
 .header__link_light {
   color: #000;
-  margin-left: 20px;
 }
 
 .header__link_span {
@@ -65,25 +74,40 @@
   font-weight: 500;
   text-decoration: none;
   text-align: center;
-  margin-left: 50px;
+  margin-left: 12px;
 }
 
-.header__account-link {
+.account-link {
+  box-sizing: border-box;
   width: 100px;
-  border-radius: 20px;
-  background-color: #f5f5f5;
-  color: black;
-  border: none;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  height: 32px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px;
+  padding-left: 10px;
+  box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.05);
   text-decoration: none;
-  text-align: center;
-  padding: 8px 0;
-  margin: 0 0 0 50px;
 }
 
-.header__account-link:hover {
+.account-link:visited {
+  color: black;
+}
+.account-link:hover {
+  cursor: pointer;
   opacity: 0.5;
+}
+
+.account-link__logo {
+  min-width: 26px;
+  min-height: 26px;
+  background-image: url("../../images/profile.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #f5f5f5;
+  border-radius: 50%;
 }
 
 @media (max-width: 1024px) {
@@ -96,7 +120,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 769px) {
   .header__nav:not(.header__nav_main) {
     display: none;
   }

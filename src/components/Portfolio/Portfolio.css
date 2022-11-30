@@ -1,5 +1,5 @@
 .portfolio {
-  padding-top: 0;
+  padding: 0 70px;
 }
 
 .portfolio__header {
@@ -42,9 +42,15 @@
   padding-top: 5px;
 }
 
+@media (max-width: 1024px) {
+  .portfolio {
+    padding: 0 50px 95px;
+  }
+}
+
 @media (max-width: 767px) {
   .portfolio {
-    padding: 0 14px 70px;
+    padding: 0 10px 70px;
   }
   .portfolio__header {
     font-size: 14px;

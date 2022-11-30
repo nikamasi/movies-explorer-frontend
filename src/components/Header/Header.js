@@ -15,7 +15,7 @@ function Header() {
             <Link to="/">
               <img
                 className="header__logo header__logo_main"
-                src={logo}
+                src={logo_movies}
                 alt="логотип зеленый"
               />
             </Link>
@@ -23,7 +23,6 @@ function Header() {
               <Link
                 to="/signup"
                 className="header__link header__link_span link"
-                href=""
               >
                 Регистрация
               </Link>
@@ -54,6 +53,7 @@ function Header() {
                 ></img>
               </Link>
               <nav className="header__nav">
+                <div className="header__nav-left">
                 <Link
                   className="header__link header__link_light header__link_span link"
                   to="/movies"
@@ -66,9 +66,11 @@ function Header() {
                 >
                   Сохраненные фильмы
                 </Link>
-                <Link to="/profile" className="header__account-link link">
-                  Аккаунт
-                </Link>
+                </div>
+                <Link to="/profile" className="account-link header__account-link">
+                <p className="=account-link__account">Аккаунт</p>
+                <div className="account-link__logo" />
+              </Link>
               </nav>
             </header>
             <Navigation />

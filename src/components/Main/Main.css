@@ -1,5 +1,5 @@
 .section {
-  padding: 110px 70px;
+  padding: 100px 70px;
   margin: auto;
 }
 
@@ -7,7 +7,7 @@
   margin: 0;
   font-weight: 400;
   font-size: 22px;
-  line-height: 27px;
+  line-height: 26px;
   border-bottom: 1px solid black;
   padding-bottom: 23px;
 }

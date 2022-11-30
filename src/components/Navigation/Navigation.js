@@ -48,11 +48,11 @@ function Navigation() {
         </Link>
         <Link
           to="/profile"
-          className="hidden-menu__link hidden-menu__account-link"
+          className="account-link hidden-menu__account-link"
           onClick={onClick}
         >
-          <p className="hidden-menu__account">Аккаунт</p>
-          <div className="hidden-menu__account-logo" />
+          <p className="account-link__account">Аккаунт</p>
+          <div className="account-link__account-logo" />
         </Link>
       </nav>
       <div

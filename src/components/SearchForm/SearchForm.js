@@ -5,6 +5,7 @@ function SearchForm() {
   return (
     <form className="search">
       <div className="search__input-container">
+        <div className="search__logo"/>
         <input
           className="search__input"
           type="text"

@@ -3,7 +3,7 @@ import arrow from "../../images/arrow.svg";
 
 function Portfolio(props) {
   return (
-    <section className="section portfolio">
+    <section className="portfolio">
       <h2 className="portfolio__header">Портфолио</h2>
       <ul className="portfolio__elements">
         <li className="portfolio__element">

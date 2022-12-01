@@ -6,36 +6,36 @@ function Portfolio(props) {
     <section className="portfolio">
       <h2 className="portfolio__header">Портфолио</h2>
       <ul className="portfolio__elements">
-        <li className="portfolio__element">
-          <p className="portfolio__project">Статичный сайт</p>
+        <li>
           <a
             className="portfolio__link"
             href="https://github.com/nikamasi/how-to-learn"
             target="_blank"
             rel="noreferrer"
           >
+            <p className="portfolio__project">Статичный сайт</p>
             <img className="portfolio__link-img" alt="arrow" src={arrow} />
           </a>
         </li>
-        <li className="portfolio__element">
-          <p className="portfolio__project">Адаптивный сайт</p>
+        <li>
           <a
             className="portfolio__link"
             href="https://github.com/nikamasi/russian-travel"
             target="_blank"
             rel="noreferrer"
           >
+            <p className="portfolio__project">Адаптивный сайт</p>
             <img className="portfolio__link-img" alt="arrow" src={arrow} />
           </a>
         </li>
-        <li className="portfolio__element">
-          <p className="portfolio__project">Одностраничное приложение</p>
+        <li>
           <a
             className="portfolio__link"
             href="https://github.com/nikamasi/react-mesto-auth"
             target="_blank"
             rel="noreferrer"
           >
+            <p className="portfolio__project">Одностраничное приложение</p>
             <img className="portfolio__link-img" alt="arrow" src={arrow} />
           </a>
         </li>

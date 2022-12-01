@@ -1,0 +1,54 @@
+.promo {
+  background-color: #073042;
+  display: flex;
+  justify-content: left;
+  align-items: top;
+  background-image: url("../../images/loops.svg");
+  background-size: 722px;
+  background-repeat: no-repeat;
+  background-position: 88% 81%;
+  margin: 0;
+  box-sizing: border-box;
+  min-height: 560px;
+  padding: 50px 70px;
+}
+
+.promo__header {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  color: white;
+  font-size: 40px;
+  line-height: 52px;
+  font-weight: 400;
+  max-width: 650px;
+}
+
+@media (max-width: 1000px) {
+  .promo {
+    min-height: 844px;
+    align-items: top;
+    justify-items: center;
+    background-position: center 89%;
+    background-size: 680px;
+  }
+  .promo__header {
+    padding-bottom: 140px;
+    margin: auto;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .promo {
+    padding: 10px;
+    min-height: 630px;
+  }
+  .promo__header {
+    font-size: 31px;
+    line-height: 39px;
+    margin: auto;
+    padding-bottom: 100px;
+  }
+}

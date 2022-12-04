@@ -77,13 +77,13 @@
   text-align: right;
   background: none;
   width: 70%;
+
 }
 
 .profile__input:read-write {
   border: 1px solid #3456f3;
   border-radius: 10px;
   padding: 13px 10px;
-  height: 15px;
 } 
 
 .profile__button-save {
@@ -94,7 +94,7 @@
   color: white;
   text-align: center;
   padding: 0;
-  margin: 0;
+  margin: 20px 0 0;
 }
 
 .profile__button-save_disabled {
@@ -111,8 +111,7 @@
   color: #ff004c;
   font-size: 11px;
   line-height: 13px;
-  text-align: center;
-  padding-bottom: 20px;
+  text-align: right;
 }
 
 @media (max-width: 1024px) {

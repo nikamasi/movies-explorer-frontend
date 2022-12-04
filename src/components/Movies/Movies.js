@@ -1,18 +1,38 @@
 import "./Movies.css";
 import SearchForm from "../SearchForm/SearchForm.js";
 import MoviesCardList from "../MoviesCardList/MoviesCardList.js";
-import { mockCards } from "../../utils/mockData";
+import { useState } from "react";
+import Preloader from "../Preloader/Preloader";
 
-function Movies() {
-    function handleLikeClick(e) {
-        e.target.classList.toggle("card__like_active")
-    }
-    return (
-        <main className="movies">
-        <SearchForm/>
-        <MoviesCardList cards={mockCards} isSavedMovies={false} handleClick={handleLikeClick}/>
-        </main>
-    )
+function Movies({ moviesData, handleLikeClick, isLoading, savedMovies }) {
+  const [foundMovies, setFoundMovies] = useState([]);
+  const [searchResult, setSearchResult] = useState("")
+
+  function handleSearchResult(movies, searchMessage) {
+    setFoundMovies(movies);
+    setSearchResult(searchMessage)
+  }
+
+  return (
+    <main className="movies">
+      <SearchForm
+        moviesData={moviesData}
+        onResult={handleSearchResult}
+      />
+      {isLoading ? (
+        <Preloader></Preloader>
+      ) : ( 
+        <MoviesCardList
+        foundMovies={foundMovies}
+        isSavedMovies={false}
+        isSearch={true}
+        savedMovies={savedMovies}
+        handleClick={handleLikeClick}
+        searchResult={searchResult}
+      />
+      )}
+    </main>
+  );
 }
 
 export default Movies;

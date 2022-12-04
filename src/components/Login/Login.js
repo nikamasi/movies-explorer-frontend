@@ -1,23 +1,19 @@
 import "./Login.css";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import logo_movies from "../../images/logo_movies.svg";
+import { useFormWithValidation } from "../../hooks/useFormWithValidation";
 
-function Login() {
-  const [errorMessage, setErrorMessage] = useState({ email: "", password: "" });
+function Login({ onSubmit, loginResponse }) {
+  const { values, handleChange, errors, isValid, resetForm } =
+    useFormWithValidation({ email: "", password: "" });
 
-  function handleError(e) {
+
+  function handleSubmit(e) {
     e.preventDefault();
-    setErrorMessage({
-      ...errorMessage,
-      [e.target.name]: "Что-то пошло не так...",
-    });
-    e.target.classList.add("auth__input_error");
-  }
-
-  function handleChange(e) {
-    e.target.classList.remove("auth__input_error");
-    setErrorMessage({ ...errorMessage, [e.target.name]: "" });
+    if (isValid) {
+      onSubmit(values);
+      resetForm();
+    }
   }
 
   return (
@@ -30,7 +26,7 @@ function Login() {
         ></img>
       </Link>
       <h1 className="auth__header">Рады видеть!</h1>
-      <form className="auth__container">
+      <form className="auth__container" onSubmit={handleSubmit}>
         <div className="auth__inputs">
           <label className="auth__label">Email</label>
           <input
@@ -38,11 +34,12 @@ function Login() {
             name="email"
             onChange={handleChange}
             type="email"
-            className="auth__input"
-            onInvalid={handleError}
+            className={`auth__input ${
+              (errors.email !== "" && isValid) ? "auth__input_error" : ""
+            }`}
           />
           <span className="auth__error" id="email-error">
-            {errorMessage.email}
+            {errors.email}
           </span>
           <label className="auth__label">Пароль</label>
           <input
@@ -51,14 +48,21 @@ function Login() {
             onChange={handleChange}
             type="password"
             minLength="2"
-            className="auth__input"
-            onInvalid={handleError}
+            className={`auth__input ${
+              (errors.password !== "" && isValid) ? "auth__input_error" : ""
+            }`}
           />
           <span className="auth__error" id="password-error">
-            {errorMessage.password}
+            {errors.password}
           </span>
         </div>
-
+        <span
+          className={`auth__result ${
+            loginResponse.value ? "" : "auth__result_error"
+          }`}
+        >
+          {loginResponse.message}
+        </span>
         <button className="button auth__button">Войти</button>
       </form>
       <p className="auth__prompt">

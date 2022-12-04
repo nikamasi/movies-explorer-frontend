@@ -51,7 +51,7 @@ function Navigation() {
           className="account-link hidden-menu__account-link"
           onClick={onClick}
         >
-          <p className="account-link__account">Аккаунт</p>
+          <p className="account-link__account account-link__account_light">Аккаунт</p>
           <div className="account-link__account-logo" />
         </Link>
       </nav>
@@ -61,9 +61,9 @@ function Navigation() {
         }`}
         onClick={onClick}
       >
-        <span className="menu-button__bar" />
-        <span className="menu-button__bar" />
-        <span className="menu-button__bar" />
+        <span className={`menu-button__bar ${location.pathname === "/" ? "menu-button__bar_dark": "" }`}/>
+        <span className={`menu-button__bar ${location.pathname === "/" ? "menu-button__bar_dark": "" }`} />
+        <span className={`menu-button__bar ${location.pathname === "/" ? "menu-button__bar_dark": "" }`} />
       </div>
     </>
   );

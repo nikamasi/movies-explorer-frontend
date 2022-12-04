@@ -37,7 +37,7 @@ function App() {
 
   const [savedMovies, setSavedMovies] = useState([]);
 
-  const [isLoading, setisLoading] = useState(false)
+  const [isLoading, setisLoading] = useState(false);
 
   useEffect(() => {
     document.body.classList.add("root");
@@ -59,36 +59,34 @@ function App() {
 
   useEffect(() => {
     if (isLogged) {
-      setisLoading(true)
-      mainAPI.getSavedMovies()
-      .then((data) => {
-        setSavedMovies(data);
-        setisLoading(false)
-      })
-      .catch((err) => console.log(err));
+      setisLoading(true);
+      mainAPI
+        .getSavedMovies()
+        .then((data) => {
+          setSavedMovies(data);
+          setisLoading(false);
+        })
+        .catch((err) => console.log(err));
     }
-
-  }, [isLogged])
+  }, [isLogged]);
 
   function handleSignIn(data) {
-    return (
-      mainAPI
-        .signIn(data)
-        .then((res) => {
-          setIsLogged(true);
-          setCurrentUser({ data });
-          localStorage.setItem("jwt", res.token);
-        })
-        .catch((err) => {
-          setLoginResponse({ value: false, message: err });
-        })
-    );
+    return mainAPI
+      .signIn(data)
+      .then((res) => {
+        setIsLogged(true);
+        setCurrentUser({ data });
+        localStorage.setItem("jwt", res.token);
+      })
+      .catch((err) => {
+        setLoginResponse({ value: false, message: err });
+      });
   }
 
   function handleSignUp(data) {
     return mainAPI
       .signUp(data)
-      .then((res) => {
+      .then(() => {
         setRegisterResponse({ value: true, message: "Успешно!" });
       })
       .then(() => handleSignIn(data))
@@ -103,6 +101,7 @@ function App() {
       .saveUserInfo(name, email)
       .then((res) => {
         setCurrentUser(res);
+        setEditProfileResponse({ value: true, message: "Данные изменены." });
       })
       .catch((err) => {
         setEditProfileResponse({ value: false, message: err });
@@ -116,10 +115,11 @@ function App() {
     history.push("/");
   }
 
-  function handleDeleteClick(e, movie) {
-    mainAPI.deleteMovie(movie._id).then(() => {
+  function handleDeleteClick(_, movie) {
+    const id = movie._id || savedMovies.find((item) => item.movieId === movie.id)._id
+    mainAPI.deleteMovie(id).then(() => {
       setSavedMovies((savedMovies) =>
-        savedMovies.filter((c) => c._id !== movie._id)
+        savedMovies.filter((c) => c._id !== id)
       );
     });
   }
@@ -130,28 +130,33 @@ function App() {
     e.target.classList.toggle("card__like_active");
     if (!isSaved) {
       mainAPI
-      .saveMovie({
-        ...movie,
-        image: `https://api.nomoreparties.co${movie.image.url}`,
-        trailer: movie.trailerLink,
-        thumbnail: `https://api.nomoreparties.co${movie.image.formats.thumbnail.hash}`,
-        movieId: movie.id,
-      })
-      .then((addedMovie) => {
-        setSavedMovies([addedMovie, ...savedMovies]);
-      })
-      .catch((err) => console.log(err));
+        .saveMovie({
+          ...movie,
+          image: `https://api.nomoreparties.co${movie.image.url}`,
+          trailer: movie.trailerLink,
+          thumbnail: `https://api.nomoreparties.co${movie.image.formats.thumbnail.hash}`,
+          movieId: movie.id,
+        })
+        .then((addedMovie) => {
+          setSavedMovies([addedMovie, ...savedMovies]);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      handleDeleteClick(e, movie);
     }
   }
 
-  useEffect(() => {
-    setisLoading(true)
-    moviesAPI.getMovies().then((data) => {
-      setMoviesData(data);
-      setisLoading(false)
-    })
-    .catch((err) => console.log(err));
-  }, []);
+  function getAPIMovies() {
+    setisLoading(true);
+    return moviesAPI
+      .getMovies()
+      .then((data) => {
+        setMoviesData(data);
+        setisLoading(false);
+        return data;
+      })
+      .catch((err) => console.log(err));
+  }
 
   function checkToken() {
     const jwt = localStorage.getItem("jwt");
@@ -207,6 +212,7 @@ function App() {
           handleLikeClick={handleLikeClick}
           isLoading={isLoading}
           savedMovies={savedMovies}
+          getAPIMovies={getAPIMovies}
         ></ProtectedRoute>
 
         <ProtectedRoute

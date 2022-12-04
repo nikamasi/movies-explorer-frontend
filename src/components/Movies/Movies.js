@@ -4,13 +4,19 @@ import MoviesCardList from "../MoviesCardList/MoviesCardList.js";
 import { useState } from "react";
 import Preloader from "../Preloader/Preloader";
 
-function Movies({ moviesData, handleLikeClick, isLoading, savedMovies }) {
+function Movies({
+  moviesData,
+  handleLikeClick,
+  isLoading,
+  savedMovies,
+  getAPIMovies,
+}) {
   const [foundMovies, setFoundMovies] = useState([]);
-  const [searchResult, setSearchResult] = useState("")
+  const [searchResult, setSearchResult] = useState("");
 
   function handleSearchResult(movies, searchMessage) {
     setFoundMovies(movies);
-    setSearchResult(searchMessage)
+    setSearchResult(searchMessage);
   }
 
   return (
@@ -18,18 +24,19 @@ function Movies({ moviesData, handleLikeClick, isLoading, savedMovies }) {
       <SearchForm
         moviesData={moviesData}
         onResult={handleSearchResult}
+        getAPIMovies={getAPIMovies}
       />
       {isLoading ? (
         <Preloader></Preloader>
-      ) : ( 
+      ) : (
         <MoviesCardList
-        foundMovies={foundMovies}
-        isSavedMovies={false}
-        isSearch={true}
-        savedMovies={savedMovies}
-        handleClick={handleLikeClick}
-        searchResult={searchResult}
-      />
+          foundMovies={foundMovies}
+          isSavedMovies={false}
+          isSearch={true}
+          savedMovies={savedMovies}
+          handleClick={handleLikeClick}
+          searchResult={searchResult}
+        />
       )}
     </main>
   );

@@ -137,7 +137,7 @@ class MainAPI {
 }
 
 export const mainAPI = new MainAPI({
-  baseUrl: "http://api.angel.nomoredomains.icu",
+  baseUrl: "https://api.angel.nomoredomains.icu",
   headers: {
     "Content-Type": "application/json",
   },

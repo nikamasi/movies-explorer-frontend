@@ -10,7 +10,7 @@ function MoviesCardList({
   isSearch,
   searchResult,
 }) {
-  let cards = [];
+  let cards = localStorage.getItem("movies");
   let movies = [];
 
   if (isSearch) {
@@ -19,8 +19,9 @@ function MoviesCardList({
     movies = savedMovies;
   }
 
+
   cards = movies.map((movie) => {
-    const isSaved = savedMovies.some((item) => movie.id === item.movieId )
+    const isSaved = savedMovies.some((item) => movie.id === item.movieId);
 
     return (
       <MoviesCard
@@ -33,24 +34,23 @@ function MoviesCardList({
     );
   });
 
-
   function handleResize() {
     width = window.innerWidth;
-    setSizes()
+    setSizes();
   }
 
-  window.addEventListener('resize', handleResize)
+  window.addEventListener("resize", handleResize);
 
   function setSizes() {
     if (769 <= width) {
-      start = 12
-      increment = 4
+      start = 16;
+      increment = 4;
     } else if (width >= 480) {
-      start = 8
-      increment = 3
+      start = 8;
+      increment = 3;
     } else {
-      start = 5
-      increment = 2
+      start = 5;
+      increment = 2;
     }
   }
 
@@ -58,30 +58,35 @@ function MoviesCardList({
   let start = 5;
   let increment = 2;
 
-  setSizes()
+  setSizes();
 
+  const [index, setIndex] = useState(start);
 
-  const [index, setIndex] = useState(start)
-
-  const [shownCards, setShownCards] = useState([...cards.slice(0,start)])
-
+  const [shownCards, setShownCards] = useState([...cards.slice(0, start)]);
 
   function handleMoreClick() {
     if (shownCards.length === 0) {
-      setShownCards([...cards.slice(0,start), cards.slice(index + increment, index + increment*2)])
+      setShownCards([
+        ...cards.slice(0, start),
+        cards.slice(index + increment, index + increment * 2),
+      ]);
     } else {
-      setShownCards([...shownCards, cards.slice(index + increment, index + increment*2)])
+      setShownCards([
+        ...shownCards,
+        cards.slice(index + increment, index + increment * 2),
+      ]);
     }
-    setIndex(index + increment)
+    setIndex(index + increment);
   }
-
 
   return (
     <section className="movies-section">
       {cards.length === 0 ? (
         <p className="movies-section__result">{searchResult}</p>
       ) : (
-        <div className="movies-section__gallery">{index === start ? cards.slice(0,start) : shownCards}</div>
+        <div className="movies-section__gallery">
+          {index === start ? cards.slice(0, start) : shownCards}
+        </div>
       )}
       {cards.length > 3 && cards.length > index + increment ? (
         <button

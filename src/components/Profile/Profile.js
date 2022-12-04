@@ -17,9 +17,9 @@ function Profile({
 
   function handleSubmit(e) {
     e.preventDefault();
+    resetForm();
     onProfileSave(values.name, values.email)
     .catch((err) => console.log(err));
-    resetForm();
     setIsEdit(false);
   }
   function handleElementChange(e) {
@@ -68,8 +68,6 @@ function Profile({
         <div className="profile__buttons">
         {isEdit ? (
           <>
-            
-
             <button
               className={`profile__button profile__button-save ${
                 !isValid ? "profile__button-save_disabled" : ""
@@ -82,7 +80,7 @@ function Profile({
             </>
         ) : (
           <>
-                      <span className="auth__result auth__result_error">
+                      <span className={`auth__result ${editProfileResponse.value ? "auth__result_success" : "auth__result_error"}`}>
               {editProfileResponse.message}
             </span>
             <button className="profile__button" onClick={handleEditClick}>

@@ -5,9 +5,6 @@ import { useState } from "react";
 import Preloader from "../Preloader/Preloader";
 
 function SavedMovies({ savedMovies, handleDeleteClick, isLoading }) {
-  function handleClick(e, movie) {
-    handleDeleteClick(e, movie);
-  }
 
   const [isSearch, setIsSearch] = useState(false);
   const [searchResult, setSearchResult] = useState("")
@@ -32,7 +29,7 @@ function SavedMovies({ savedMovies, handleDeleteClick, isLoading }) {
         foundMovies={foundMovies}
         isSavedMovies={true}
         isSearch={isSearch}
-        handleClick={handleClick}
+        handleClick={handleDeleteClick}
         searchResult={searchResult}
       />
       {isLoading ? <Preloader></Preloader> : ""}

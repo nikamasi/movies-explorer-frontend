@@ -20,7 +20,6 @@ function App() {
   const [currentUser, setCurrentUser] = useState({
     name: "",
     email: "",
-    isLogged: false,
   });
   const [registerResponse, setRegisterResponse] = useState({
     value: false,
@@ -110,8 +109,7 @@ function App() {
 
   function handleLogout() {
     setIsLogged(false);
-    localStorage.removeItem("jwt");
-    localStorage.setItem("isLogged", false);
+    localStorage.clear()
     history.push("/");
   }
 
@@ -127,7 +125,6 @@ function App() {
   const [moviesData, setMoviesData] = useState([]);
 
   function handleLikeClick(e, movie, isSaved) {
-    e.target.classList.toggle("card__like_active");
     if (!isSaved) {
       mainAPI
         .saveMovie({
@@ -138,9 +135,14 @@ function App() {
           movieId: movie.id,
         })
         .then((addedMovie) => {
+          e.target.classList.toggle("card__like_active");
           setSavedMovies([addedMovie, ...savedMovies]);
         })
-        .catch((err) => console.log(err));
+        .catch((res) => {
+          if (res.status === 401) {
+            handleLogout()
+          }
+        });
     } else {
       handleDeleteClick(e, movie);
     }
@@ -152,11 +154,13 @@ function App() {
       .getMovies()
       .then((data) => {
         setMoviesData(data);
+        localStorage.setItem('moviesData', JSON.stringify(data))
         setisLoading(false);
         return data;
       })
       .catch((err) => console.log(err));
   }
+  // localStorage.clear('moviesData')
 
   function checkToken() {
     const jwt = localStorage.getItem("jwt");
@@ -167,7 +171,7 @@ function App() {
     mainAPI
       .getUserInfo(jwt)
       .then((data) => {
-        setCurrentUser({ ...data, isLogged: true });
+        setCurrentUser(data);
         setIsLogged(true);
         localStorage.setItem("isLogged", true);
       })

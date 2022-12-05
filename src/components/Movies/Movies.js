@@ -13,6 +13,7 @@ function Movies({
 }) {
   const [foundMovies, setFoundMovies] = useState([]);
   const [searchResult, setSearchResult] = useState("");
+  const [isSearch, setIsSearch] = useState(false)
 
   function handleSearchResult(movies, searchMessage) {
     setFoundMovies(movies);
@@ -25,6 +26,7 @@ function Movies({
         moviesData={moviesData}
         onResult={handleSearchResult}
         getAPIMovies={getAPIMovies}
+        setIsSearch={setIsSearch}
       />
       {isLoading ? (
         <Preloader></Preloader>
@@ -32,10 +34,12 @@ function Movies({
         <MoviesCardList
           foundMovies={foundMovies}
           isSavedMovies={false}
-          isSearch={true}
+          isSearch={isSearch}
+          setIsSearch={setIsSearch}
           savedMovies={savedMovies}
           handleClick={handleLikeClick}
           searchResult={searchResult}
+          setSearchResult={setSearchResult}
         />
       )}
     </main>

@@ -13,7 +13,6 @@ function SavedMovies({ savedMovies, handleDeleteClick, isLoading }) {
 
   function handleSearchResult(movies, searchMessage) {
     setFoundMovies(movies);
-    setIsSearch(true);
     setSearchResult(searchMessage)
   }
 
@@ -23,12 +22,14 @@ function SavedMovies({ savedMovies, handleDeleteClick, isLoading }) {
         moviesData={savedMovies}
         setFoundMovies={setFoundMovies}
         onResult={handleSearchResult}
+        setIsSearch={setIsSearch}
       />
       <MoviesCardList
         savedMovies={savedMovies}
         foundMovies={foundMovies}
         isSavedMovies={true}
         isSearch={isSearch}
+        setIsSearch={setIsSearch}
         handleClick={handleDeleteClick}
         searchResult={searchResult}
       />

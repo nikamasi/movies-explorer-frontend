@@ -1,6 +1,17 @@
 import "./MoviesCardList.css";
 import MoviesCard from "../MoviesCard/MoviesCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useWindowWidth } from "../../hooks/useWindowWidth";
+import {
+  WINDOW_WIDTH_SMALL,
+  WINDOW_WIDTH_MID,
+  CARD_NUM_START_LARGE,
+  CARD_NUM_START_MID,
+  CARD_NUM_START_SMALL,
+  CARD_NUM_ADD_LARGE,
+  CARD_NUM_ADD_MID,
+  CARD_NUM_ADD_SMALL,
+} from "../../utils/constants";
 
 function MoviesCardList({
   isSavedMovies,
@@ -9,86 +20,97 @@ function MoviesCardList({
   foundMovies,
   isSearch,
   searchResult,
+  setIsSearch,
+  setSearchResult,
 }) {
-  let cards = localStorage.getItem("movies");
-  let movies = [];
-
-  if (isSearch) {
-    movies = foundMovies;
-  } else {
-    movies = savedMovies;
-  }
-
-
-  cards = movies.map((movie) => {
-    const isSaved = savedMovies.some((item) => movie.id === item.movieId);
-
-    return (
-      <MoviesCard
-        movie={movie}
-        key={movie._id || movie.id}
-        buttonClass={isSavedMovies ? "card__delete" : "card__like"}
-        handleClick={handleClick}
-        isSaved={isSaved}
-      />
-    );
+  const [cardNumberSettings, setCardsNumberSettings] = useState({
+    start: 12,
+    add: 4,
   });
+  const [moviesNumber, setMoviesNumber] = useState(0);
+  const [cardsNumber, setCardsNumber] = useState(0);
+  const [shownCards, setShownCards] = useState([]);
+  const width = useWindowWidth();
 
-  function handleResize() {
-    width = window.innerWidth;
-    setSizes();
+  function makeCards(movies) {
+    setMoviesNumber(movies.length);
+    return movies.map((movie) => {
+      const isSaved = savedMovies.some((item) => movie.id === item.movieId);
+      return (
+        <MoviesCard
+          movie={movie}
+          key={movie._id || movie.id}
+          buttonClass={isSavedMovies ? "card__delete" : "card__like"}
+          handleClick={handleClick}
+          isSaved={isSaved}
+        />
+      );
+    });
   }
-
-  window.addEventListener("resize", handleResize);
-
-  function setSizes() {
-    if (769 <= width) {
-      start = 16;
-      increment = 4;
-    } else if (width >= 480) {
-      start = 8;
-      increment = 3;
-    } else {
-      start = 5;
-      increment = 2;
-    }
-  }
-
-  let width = window.innerWidth;
-  let start = 5;
-  let increment = 2;
-
-  setSizes();
-
-  const [index, setIndex] = useState(start);
-
-  const [shownCards, setShownCards] = useState([...cards.slice(0, start)]);
 
   function handleMoreClick() {
-    if (shownCards.length === 0) {
-      setShownCards([
-        ...cards.slice(0, start),
-        cards.slice(index + increment, index + increment * 2),
-      ]);
-    } else {
-      setShownCards([
-        ...shownCards,
-        cards.slice(index + increment, index + increment * 2),
-      ]);
-    }
-    setIndex(index + increment);
+    setCardsNumber(cardsNumber + cardNumberSettings.add);
   }
+
+  function setSizes(width) {
+    if (WINDOW_WIDTH_MID <= width) {
+      setCardsNumberSettings({ start: CARD_NUM_START_LARGE, add: CARD_NUM_ADD_LARGE });
+    } else if (WINDOW_WIDTH_SMALL <= width) {
+      setCardsNumberSettings({ start: CARD_NUM_START_MID, add: CARD_NUM_ADD_MID });
+    } else {
+      setCardsNumberSettings({ start: CARD_NUM_START_SMALL, add: CARD_NUM_ADD_SMALL });
+    }
+  }
+
+  useEffect(() => {
+    if (!isSavedMovies) {
+      const movies = localStorage.getItem("filteredMovies");
+      const searchMessage = localStorage.getItem("searchMessage");
+      if (movies) {
+        setShownCards(makeCards(JSON.parse(movies)));
+      }
+      setSearchResult(searchMessage);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (isSavedMovies) {
+      setShownCards(makeCards(savedMovies));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [savedMovies]);
+
+  useEffect(() => {
+    if (foundMovies.length !== 0) {
+      setShownCards(makeCards(foundMovies));
+    } else if (isSearch) {
+      setShownCards([]);
+      setMoviesNumber(0);
+      setIsSearch(false);
+    }
+    setCardsNumber(cardNumberSettings.start);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [foundMovies]);
+
+  useEffect(() => {
+    setCardsNumber(cardNumberSettings.start);
+  }, [cardNumberSettings]);
+
+  useEffect(() => {
+    setSizes(width);
+  }, [width]);
 
   return (
     <section className="movies-section">
-      {cards.length === 0 ? (
+      {shownCards.length === 0 ? (
         <p className="movies-section__result">{searchResult}</p>
       ) : (
         <div className="movies-section__gallery">
-          {index === start ? cards.slice(0, start) : shownCards}
+          {shownCards.slice(0, cardsNumber)}
         </div>
       )}
-      {cards.length > 3 && cards.length > index + increment ? (
+      {moviesNumber > cardsNumber ? (
         <button
           className="movies-section__more-button"
           onClick={handleMoreClick}

@@ -63,10 +63,10 @@ function Login({ onSubmit, loginResponse }) {
         >
           {loginResponse.message}
         </span>
-        <button className="button auth__button">Войти</button>
+        <button className={`button auth__button ${ isValid ? "" : "button_disabled"}`} disabled={!isValid}>Войти</button>
       </form>
       <p className="auth__prompt">
-        Ещё не зарегистрированы?{" "}
+        Ещё не зарегистрированы?
         <Link to="/signup" className="auth__link link">
           Регистрация
         </Link>

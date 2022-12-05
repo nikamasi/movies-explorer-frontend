@@ -11,7 +11,7 @@ class MainAPI {
       if (res.status === 500) {
         errorMessage = "На сервере произошла ошибка."
       }
-      return Promise.reject(errorMessage);
+      return Promise.reject({status: res.status, errorMessage: errorMessage});
     }
   }
 

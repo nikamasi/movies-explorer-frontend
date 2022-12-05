@@ -1,10 +1,10 @@
 import { Route } from "react-router-dom";
 import logo_movies from "../../images/logo_movies.svg";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Navigation from "../Navigation/Navigation.js";
 import "./Header.css";
 
-function Header({isLogged}) {
+function Header({ isLogged }) {
   const loggedNavBar = (
     <nav className="header__nav">
       <div className="header__nav-left">
@@ -46,18 +46,24 @@ function Header({isLogged}) {
   const moviesNavBar = (
     <nav className="header__nav">
       <div className="header__nav-left">
-        <Link
-          className="header__link header__link_light header__link_span link"
+        <NavLink
+          className={(isActive) =>
+            "header__link header__link_light link " +
+            (isActive ? "header__link_span" : "")
+          }
           to="/movies"
         >
           Фильмы
-        </Link>
-        <Link
-          className="header__link header__link_light link"
+        </NavLink>
+        <NavLink
+          className={(isActive) =>
+            "header__link header__link_light link " +
+            (isActive ? "header__link_span" : "")
+          }
           to="/saved-movies"
         >
           Сохраненные фильмы
-        </Link>
+        </NavLink>
       </div>
       <Link to="/profile" className="account-link header__account-link">
         <p className="account-link__account account-link__account_light">
@@ -99,12 +105,11 @@ function Header({isLogged}) {
         <Navigation />
       </Route>
       <Route exact path="/profile">
-      <header className="header header_light">
+        <header className="header header_light">
           {logoLink}
           {moviesNavBar}
         </header>
         <Navigation />
-
       </Route>
     </>
   );

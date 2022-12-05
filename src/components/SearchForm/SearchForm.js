@@ -1,77 +1,129 @@
 import "./SearchForm.css";
 import FilterCheckbox from "../FilterCheckbox/FilterCheckbox.js";
-import { useEffect } from "react";
-import { filterMovies, filterShortMovies } from "../../utils/filterMovies";
+import { useEffect, useState } from "react";
+import { filterMovies } from "../../utils/filterMovies";
 import { useLocation } from "react-router-dom";
 
-function SearchForm({ moviesData, onResult, getAPIMovies }) {
-  const location = useLocation();
+function SearchForm({ moviesData, onResult, getAPIMovies, setIsSearch }) {
 
-  function matchPreviousSearch(e) {
-    return (
-      localStorage.getItem(`${location.pathname}-key`) === e.target.key.value &&
-      localStorage.getItem(`${location.pathname}-toggleState`) ===
-        e.target.checkbox.checked.toString()
-    );
-  }
+  const [key, setKey] = useState("")
 
-  function updateStorage(e, foundMovies) {
-    localStorage.setItem(`${location.pathname}-key`, e.target.key.value);
-    localStorage.setItem(location.pathname, JSON.stringify(foundMovies));
-    localStorage.setItem(`${location.pathname}-toggleState`, e.target.checked);
+  function updateStorage(
+    key,
+    checked,
+    foundMovies,
+    filteredMovies,
+    searchMessage
+  ) {
+    localStorage.setItem("key", key);
+    localStorage.setItem("foundMovies", JSON.stringify(foundMovies));
+    localStorage.setItem("filteredMovies", JSON.stringify(filteredMovies));
+    localStorage.setItem("checked", checked);
+    localStorage.setItem("searchMessage", searchMessage);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
     let foundMovies = [];
+    let filteredMovies = [];
     let searchMessage = "";
+    setIsSearch(true);
     if (e.target.key.value === "") {
-      foundMovies = [];
       searchMessage = "Нужно ввести ключевое слово";
-    } else if (matchPreviousSearch(e)) {
-      foundMovies = JSON.parse(localStorage.getItem(location.pathname));
-      searchMessage = "";
-    } else if (moviesData.length === 0) {
-      getAPIMovies().then((data) => {
-        foundMovies = filterMovies(data, e.target.checkbox.checked, e.target.key.value);
-        return onResult(
-          foundMovies,
-          foundMovies.length === 0 ? "Ничего не найдено" : ""
-        );
-      });
+    } else if (location.pathname === "/saved-movies") {
+      filteredMovies = filterMovies(
+        moviesData,
+        e.target.checkbox.checked,
+        e.target.key.value
+      );
+      searchMessage = filteredMovies.length === 0 ? "Ничего не найдено" : "";
     } else {
-      foundMovies = filterMovies(moviesData, e.target.checkbox.checked, e.target.key.value);
-      searchMessage = foundMovies.length === 0 ? "Ничего не найдено" : "";
+      const data = JSON.parse(localStorage.getItem("moviesData"));
+      if (data) {
+        foundMovies = data;
+        filteredMovies = filterMovies(
+          data,
+          e.target.checkbox.checked,
+          e.target.key.value
+        );
+        searchMessage = filteredMovies.length === 0 ? "Ничего не найдено" : "";
+      } else {
+        getAPIMovies().then((data) => {
+          foundMovies = data;
+          filteredMovies = filterMovies(
+            data,
+            e.target.checkbox.checked,
+            e.target.key.value
+          );
+          return onResult(
+            filteredMovies,
+            foundMovies.length === 0 ? "Ничего не найдено" : ""
+          );
+        });
+      }
+      filteredMovies = filterMovies(
+        foundMovies,
+        e.target.checkbox.checked,
+        e.target.key.value
+      );
+      searchMessage = filteredMovies.length === 0 ? "Ничего не найдено" : "";
     }
-    onResult(foundMovies, searchMessage);
-    updateStorage(e, foundMovies)
+
+    onResult(filteredMovies, searchMessage);
+    if (location.pathname === "/movies") {
+      updateStorage(
+        e.target.key.value,
+        e.target.checkbox.checked,
+        foundMovies,
+        filteredMovies,
+        searchMessage
+      );
+    }
   }
 
   function handleToggle(e) {
-    if (e.target.checked) {
-      const foundMovies = filterShortMovies(
-        JSON.parse(localStorage.getItem(location.pathname))
-      );
-      if (foundMovies.length === 0) {
-        onResult([], "Ничего не найдено");
-      } else {
-        onResult(foundMovies, "");
-      }
+    let foundMovies = []
+    if (location.pathname === "/saved-movies") {
+      foundMovies = moviesData;
     } else {
-      onResult(JSON.parse(localStorage.getItem(location.pathname)));
+      foundMovies = JSON.parse(localStorage.getItem("foundMovies"));
+    }
+    let filteredMovies = [];
+    let searchMessage = "";
+    if (key === "") {
+      filteredMovies = [];
+      foundMovies = [];
+      searchMessage = "Нужно ввести ключевое слово";
+    } else {
+      if (foundMovies.length === 0) {
+        filteredMovies = [];
+      } else {
+        filteredMovies = filterMovies(foundMovies, e.target.checked, key);
+      }
+      searchMessage = filterMovies.length !== 0 ? "" : "Ничего не найдено";
+    }
+    onResult(filteredMovies, searchMessage);
+    if (location.pathname === "/movies") {
+      updateStorage(
+        key,
+        e.target.checked,
+        foundMovies,
+        filteredMovies,
+        searchMessage
+      );
     }
   }
 
+  const location = useLocation();
+
+  function handleKeyChange(e) {
+    setKey(e.target.value)
+  }
+
   useEffect(() => {
-    if (
-      location.pathname === "/movies" && 
-      localStorage.getItem(location.pathname) &&
-      moviesData.length !== 0
-    ) {
-      onResult(JSON.parse(localStorage.getItem(location.pathname)), "");
-    }
+    setKey(location.pathname === "/movies" ? localStorage.getItem("key") : "")
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+  }, [])
 
   return (
     <form className="search" onSubmit={handleSubmit}>
@@ -82,8 +134,9 @@ function SearchForm({ moviesData, onResult, getAPIMovies }) {
           type="text"
           id="key"
           name="search"
+          value={key? key : ""}
+          onChange={handleKeyChange}
           placeholder={"Фильм"}
-          defaultValue={moviesData.length !== 0 ? localStorage.getItem(`${location.pathname}-key`) : ""}
         ></input>
         <button className="search__button" type="submit" />
       </div>

@@ -5,19 +5,20 @@ import { validate } from "../utils/validators";
 export function useFormWithValidation(inputValues) {
   const [values, setValues] = useState(inputValues);
   const [errors, setErrors] = useState({});
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState(undefined);
 
   function handleChange(event) {
     const target = event.target;
     const name = target.name;
     const value = target.value;
-    const errorMessage = validate(name, value);
+    const elements = event.target.form.elements;
+    const formValid = !Array.from(elements).some(element => {
+      return !validate(element.name, element.value).isOk
+    })
+    setIsValid(formValid);
+    const validationResult = validate(name, value);
     setValues({ ...values, [name]: value });
-    setErrors({ ...errors, [name]: errorMessage });
-    setIsValid(
-      !Object.values(errors).some((element) => element !== "") &&
-        !Array.from(values).some((element) => element === "")
-    );
+    setErrors({ ...errors, [name]: validationResult.message });
   }
 
   const resetForm = useCallback(

@@ -7,6 +7,7 @@ import { useLocation } from "react-router-dom";
 function SearchForm({ moviesData, onResult, getAPIMovies, setIsSearch }) {
 
   const [key, setKey] = useState("")
+  const [checked, setChecked] = useState(localStorage.getItem('checked') === 'true')
 
   function updateStorage(
     key,
@@ -81,7 +82,21 @@ function SearchForm({ moviesData, onResult, getAPIMovies, setIsSearch }) {
     }
   }
 
+  useEffect(() => {
+    if (location.pathname === "/saved-movies") {
+      let filteredMovies = filterMovies(
+        moviesData,
+        checked,
+        key
+      );
+      let searchMessage = filteredMovies.length === 0 ? "Ничего не найдено" : "";
+      onResult(filteredMovies, searchMessage)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [moviesData])
+
   function handleToggle(e) {
+    setChecked(e.target.checked)
     let foundMovies = []
     if (location.pathname === "/saved-movies") {
       foundMovies = moviesData;
@@ -100,7 +115,7 @@ function SearchForm({ moviesData, onResult, getAPIMovies, setIsSearch }) {
       } else {
         filteredMovies = filterMovies(foundMovies, e.target.checked, key);
       }
-      searchMessage = filterMovies.length !== 0 ? "" : "Ничего не найдено";
+      searchMessage = filteredMovies.length !== 0 ? "" : "Ничего не найдено";
     }
     onResult(filteredMovies, searchMessage);
     if (location.pathname === "/movies") {

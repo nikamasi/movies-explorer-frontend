@@ -62,6 +62,7 @@ function App() {
       mainAPI
         .getSavedMovies()
         .then((data) => {
+          localStorage.setItem('savedMovies', JSON.stringify(data));
           setSavedMovies(data);
           setisLoading(false);
         })
@@ -78,7 +79,7 @@ function App() {
         localStorage.setItem("jwt", res.token);
       })
       .catch((err) => {
-        setLoginResponse({ value: false, message: err });
+        setLoginResponse({ value: false, message: err.errorMessage });
       });
   }
 
@@ -91,7 +92,7 @@ function App() {
       .then(() => handleSignIn(data))
       .then(() => history.push("/movies"))
       .catch((err) => {
-        setRegisterResponse({ value: false, message: err });
+        setRegisterResponse({ value: false, message: err.errorMessage });
       });
   }
 
@@ -103,7 +104,7 @@ function App() {
         setEditProfileResponse({ value: true, message: "Данные изменены." });
       })
       .catch((err) => {
-        setEditProfileResponse({ value: false, message: err });
+        setEditProfileResponse({ value: false, message: err.errorMessage });
       });
   }
 
@@ -160,7 +161,6 @@ function App() {
       })
       .catch((err) => console.log(err));
   }
-  // localStorage.clear('moviesData')
 
   function checkToken() {
     const jwt = localStorage.getItem("jwt");

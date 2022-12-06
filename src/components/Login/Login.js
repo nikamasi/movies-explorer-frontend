@@ -7,7 +7,6 @@ function Login({ onSubmit, loginResponse }) {
   const { values, handleChange, errors, isValid, resetForm } =
     useFormWithValidation({ email: "", password: "" });
 
-
   function handleSubmit(e) {
     e.preventDefault();
     if (isValid) {
@@ -35,7 +34,7 @@ function Login({ onSubmit, loginResponse }) {
             onChange={handleChange}
             type="email"
             className={`auth__input ${
-              (errors.email !== "" && isValid) ? "auth__input_error" : ""
+              errors.email !== "" && isValid ? "auth__input_error" : ""
             }`}
           />
           <span className="auth__error" id="email-error">
@@ -49,7 +48,7 @@ function Login({ onSubmit, loginResponse }) {
             type="password"
             minLength="2"
             className={`auth__input ${
-              (errors.password !== "" && isValid) ? "auth__input_error" : ""
+              errors.password !== "" && isValid ? "auth__input_error" : ""
             }`}
           />
           <span className="auth__error" id="password-error">
@@ -63,10 +62,15 @@ function Login({ onSubmit, loginResponse }) {
         >
           {loginResponse.message}
         </span>
-        <button className={`button auth__button ${ isValid ? "" : "button_disabled"}`} disabled={!isValid}>Войти</button>
+        <button
+          className={`button auth__button ${isValid ? "" : "button_disabled"}`}
+          disabled={!isValid}
+        >
+          Войти
+        </button>
       </form>
       <p className="auth__prompt">
-        Ещё не зарегистрированы?
+        Ещё не зарегистрированы? 
         <Link to="/signup" className="auth__link link">
           Регистрация
         </Link>

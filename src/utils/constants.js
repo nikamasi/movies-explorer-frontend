@@ -1,6 +1,6 @@
 export const SHORT_MOVIE_LENGTH = 40;
 export const WINDOW_WIDTH_SMALL = 468;
-export const WINDOW_WIDTH_MID = 768;
+export const WINDOW_WIDTH_MID = 1025;
 export const CARD_NUM_START_LARGE = 16;
 export const CARD_NUM_START_MID= 8;
 export const CARD_NUM_START_SMALL = 5;

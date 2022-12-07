@@ -7,6 +7,10 @@
   line-height: 16px;
   max-width: 1140px;
   margin: 0 auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .footer__copyright {

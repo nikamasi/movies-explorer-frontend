@@ -12,12 +12,14 @@
 
 .header_light {
   background-color: white;
+  color: black;
 }
 
 .header__logo {
   width: 38px;
   height: 38px;
   background-color: none;
+  background-repeat: no-repeat;
 }
 
 .header__nav {
@@ -90,10 +92,19 @@
   padding-left: 10px;
   box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.05);
   text-decoration: none;
+  color: white;
+}
+
+.account-link__account_light {
+  color: black;
+}
+
+.account-link__account_light:visited {
+  color: black;
 }
 
 .account-link:visited {
-  color: black;
+  color: white;
 }
 .account-link:hover {
   cursor: pointer;
@@ -124,6 +135,7 @@
   .header__nav:not(.header__nav_main) {
     display: none;
   }
+  
 }
 
 @media (max-width: 767px) {

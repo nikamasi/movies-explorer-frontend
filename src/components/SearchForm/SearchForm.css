@@ -64,7 +64,6 @@
 .search__input:focus {
   outline: none;
   border-bottom: #3456f3 solid 1px;
-  /* background-color: red; */
 }
 
 @media (max-width: 1024px) {

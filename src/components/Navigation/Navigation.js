@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./Navigation.css";
 
 function Navigation() {
@@ -23,37 +23,32 @@ function Navigation() {
         className={`background ${menuIsOpen ? "background_active" : ""}`}
       ></div>
       <nav className={`hidden-menu ${menuIsOpen ? "hidden-menu_active" : ""}`}>
-        <Link to="/" className="hidden-menu__link" onClick={onClick}>
+        <NavLink exact to="/" 
+        className={isActive => "hidden-menu__link " + (isActive ? "hidden-menu__link_active" : "")} onClick={onClick}>
           Главная
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to="/movies"
-          className={`hidden-menu__link ${
-            location.pathname === "/movies" ? "hidden-menu__link_active" : ""
-          }`}
+          className={isActive => "hidden-menu__link " + (isActive ? "hidden-menu__link_active" : "")}
           onClick={onClick}
         >
           Фильмы
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to="/saved-movies"
-          className={`hidden-menu__link ${
-            location.pathname === "/saved-movies"
-              ? "hidden-menu__link_active"
-              : ""
-          }`}
+          className={isActive => "hidden-menu__link " + (isActive ? "hidden-menu__link_active" : "")}
           onClick={onClick}
         >
           Сохраненные фильмы
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to="/profile"
           className="account-link hidden-menu__account-link"
           onClick={onClick}
         >
-          <p className="account-link__account">Аккаунт</p>
+          <p className="account-link__account account-link__account_light">Аккаунт</p>
           <div className="account-link__account-logo" />
-        </Link>
+        </NavLink>
       </nav>
       <div
         className={`menu-button ${
@@ -61,9 +56,9 @@ function Navigation() {
         }`}
         onClick={onClick}
       >
-        <span className="menu-button__bar" />
-        <span className="menu-button__bar" />
-        <span className="menu-button__bar" />
+        <span className={`menu-button__bar ${location.pathname === "/" ? "menu-button__bar_dark": "" }`}/>
+        <span className={`menu-button__bar ${location.pathname === "/" ? "menu-button__bar_dark": "" }`} />
+        <span className={`menu-button__bar ${location.pathname === "/" ? "menu-button__bar_dark": "" }`} />
       </div>
     </>
   );

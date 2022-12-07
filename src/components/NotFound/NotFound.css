@@ -26,6 +26,7 @@
   cursor: pointer;
   color: #3456f3;
   margin-top: 184px;
+  text-decoration: none;
 }
 
 .not-found__back:visited {

@@ -1,33 +1,39 @@
 import "./Profile.css";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext.js";
+import { useFormWithValidation } from "../../hooks/useFormWithValidation";
 
-function Profile(props) {
-  const [isEdit, setEditState] = useState(false);
-  const [name, setName] = useState("Виталий");
-  const [email, setEmail] = useState("pochta@yandex.ru");
-  const [errortext, setErrorText] = useState("");
-  const [isError, setIsError] = useState(false);
+function Profile({
+  onProfileSave,
+  onLogout,
+  editProfileResponse,
+  setEditProfileResponse,
+}) {
+  const currentUser = useContext(CurrentUserContext);
+  const [isEdit, setIsEdit] = useState(false);
+
+  const { values, handleChange, errors, isValid, resetForm } =
+    useFormWithValidation({ name: currentUser.name, email: currentUser.email });
 
   function handleSubmit(e) {
     e.preventDefault();
-    setName(e.target.name.value);
-    setEmail(e.target.email.value);
-    setEditState(false);
+    resetForm();
+    onProfileSave(values.name, values.email)
+    .catch((err) => console.log(err));
+    setIsEdit(false);
+  }
+  function handleElementChange(e) {
+    setEditProfileResponse({ value: false, message: "" });
+    handleChange(e);
   }
 
   function handleEditClick(e) {
-    setEditState(true);
-  }
-
-  function handleError(e) {
-    e.preventDefault();
-    setErrorText("При обновлении профиля произошла ошибка.");
-    setIsError(true);
+    setIsEdit(true);
   }
 
   return (
     <div className="profile">
-      <h1 className="profile__heading">Привет, Виталий!</h1>
+      <h1 className="profile__heading">Привет, {currentUser.name}!</h1>
       <form className="profile__elements" onSubmit={handleSubmit}>
         <div className="profile__element">
           <label className="profile__text">Имя</label>
@@ -36,52 +42,59 @@ function Profile(props) {
             id="name"
             name="name"
             className="profile__input profile__text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={isEdit ? values.name : currentUser.name}
+            onChange={handleElementChange}
             disabled={!isEdit}
             minLength="2"
             required
-            onInvalid={handleError}
           ></input>
         </div>
+        <span className="profile__error">{errors.name}</span>
         <div className="profile__element">
           <label className="profile__text">E-mail</label>
           <input
             className="profile__input profile__text"
-            value={email}
+            value={isEdit ? values.email : currentUser.email}
             id="email"
             name="email"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleElementChange}
             disabled={!isEdit}
             type="email"
             required
-            onInvalid={handleError}
           />
         </div>
+        <span className="profile__error ">{errors.email}</span>
 
+        <div className="profile__buttons">
         {isEdit ? (
-          <div className="profile__buttons">
-            <span className="profile__error ">{errortext}</span>
+          <>
             <button
               className={`profile__button profile__button-save ${
-                isError ? "profile__button-save_disabled" : ""
+                !isValid ? "profile__button-save_disabled" : ""
               } button`}
               type="submit"
-              disabled={isError}
+              disabled={!isValid}
             >
               Сохранить
             </button>
-          </div>
+            </>
         ) : (
-            <div className="profile__buttons">
-              <button className="profile__button" onClick={handleEditClick}>
-                Редактировать
-              </button>
-              <button className="profile__button profile__button_out">
-                Выйти из аккаунта
-              </button>
-            </div>
+          <>
+                      <span className={`auth__result ${editProfileResponse.value ? "auth__result_success" : "auth__result_error"}`}>
+              {editProfileResponse.message}
+            </span>
+            <button className="profile__button" onClick={handleEditClick}>
+              Редактировать
+            </button>
+            <button
+              className="profile__button profile__button_out"
+              onClick={onLogout}
+            >
+              Выйти из аккаунта
+            </button>
+            </>
         )}
+        </div>
       </form>
     </div>
   );

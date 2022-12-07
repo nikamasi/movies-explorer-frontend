@@ -5,17 +5,21 @@ export function filterMovies(moviesData, isShortFilm, key) {
   if (isShortFilm) {
     Array.from(moviesData).forEach((movie) => {
       if (movie.duration < SHORT_MOVIE_LENGTH) {
-        if ((movie.nameRU + movie.nameEN).toLowerCase().includes(key.toLowerCase()))  {
+        if (
+          (movie.nameRU + movie.nameEN)
+            .toLowerCase()
+            .includes(key.toLowerCase())
+        ) {
           foundMovies.push(movie);
         }
       }
     });
   } else {
     Array.from(moviesData).forEach((movie) => {
-      if (movie.duration >= SHORT_MOVIE_LENGTH) {
-        if ((movie.nameRU + movie.nameEN).toLowerCase().includes(key.toLowerCase())) {
-          foundMovies.push(movie);
-        }
+      if (
+        (movie.nameRU + movie.nameEN).toLowerCase().includes(key.toLowerCase())
+      ) {
+        foundMovies.push(movie);
       }
     });
   }

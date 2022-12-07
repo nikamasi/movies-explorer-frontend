@@ -62,7 +62,7 @@ function App() {
       mainAPI
         .getSavedMovies()
         .then((data) => {
-          localStorage.setItem('savedMovies', JSON.stringify(data));
+          localStorage.setItem("savedMovies", JSON.stringify(data));
           setSavedMovies(data);
           setisLoading(false);
         })
@@ -110,17 +110,22 @@ function App() {
 
   function handleLogout() {
     setIsLogged(false);
-    localStorage.clear()
+    localStorage.clear();
     history.push("/");
   }
 
-  function handleDeleteClick(_, movie) {
-    const id = movie._id || savedMovies.find((item) => item.movieId === movie.id)._id
-    mainAPI.deleteMovie(id).then(() => {
-      setSavedMovies((savedMovies) =>
-        savedMovies.filter((c) => c._id !== id)
-      );
-    });
+  function handleDeleteClick(e, movie, _) {
+    const id =
+      movie._id || savedMovies.find((item) => item.movieId === movie.id)._id;
+    mainAPI
+      .deleteMovie(id)
+      .then(() => {
+        e.target.classList.toggle("card__like_active");
+        setSavedMovies((savedMovies) =>
+          savedMovies.filter((c) => c._id !== id)
+        );
+      })
+      .then();
   }
 
   const [moviesData, setMoviesData] = useState([]);
@@ -141,7 +146,7 @@ function App() {
         })
         .catch((res) => {
           if (res.status === 401) {
-            handleLogout()
+            handleLogout();
           }
         });
     } else {
@@ -155,7 +160,7 @@ function App() {
       .getMovies()
       .then((data) => {
         setMoviesData(data);
-        localStorage.setItem('moviesData', JSON.stringify(data))
+        localStorage.setItem("moviesData", JSON.stringify(data));
         setisLoading(false);
         return data;
       })

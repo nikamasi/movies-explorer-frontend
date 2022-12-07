@@ -77,9 +77,15 @@ function MoviesCardList({
   useEffect(() => {
     if (isSavedMovies) {
       setShownCards(makeCards(savedMovies));
+    } else {
+      const movies = localStorage.getItem("filteredMovies");
+      if (movies && movies.length !== 0) {
+        setShownCards(makeCards(JSON.parse(movies)));
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedMovies]);
+  
 
   useEffect(() => {
     if (foundMovies.length !== 0) {
@@ -90,6 +96,7 @@ function MoviesCardList({
       setIsSearch(false);
     }
     setCardsNumber(cardNumberSettings.start);
+    // localStorage.setItem('foundMovies', )
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [foundMovies]);
 

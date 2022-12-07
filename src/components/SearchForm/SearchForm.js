@@ -49,16 +49,24 @@ function SearchForm({ moviesData, onResult, getAPIMovies, setIsSearch }) {
         );
         searchMessage = filteredMovies.length === 0 ? "Ничего не найдено" : "";
       } else {
-        getAPIMovies().then((data) => {
+        return getAPIMovies().then((data) => {
           foundMovies = data;
           filteredMovies = filterMovies(
             data,
             e.target.checkbox.checked,
             e.target.key.value
           );
+          searchMessage = filteredMovies.length === 0 ? "Ничего не найдено" : "";
+            updateStorage(
+              e.target.key.value,
+              e.target.checkbox.checked,
+              foundMovies,
+              filteredMovies,
+              searchMessage
+            );
           return onResult(
             filteredMovies,
-            foundMovies.length === 0 ? "Ничего не найдено" : ""
+            searchMessage
           );
         });
       }
@@ -69,7 +77,6 @@ function SearchForm({ moviesData, onResult, getAPIMovies, setIsSearch }) {
       );
       searchMessage = filteredMovies.length === 0 ? "Ничего не найдено" : "";
     }
-
     onResult(filteredMovies, searchMessage);
     if (location.pathname === "/movies") {
       updateStorage(
